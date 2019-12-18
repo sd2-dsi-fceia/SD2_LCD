@@ -68,15 +68,8 @@ static uint16_t contador = 0;
 
 int main(void)
 {
-    smc_power_state_t currentPowerState;
-    /**********************************
-     * Ver porque
-     *****************************/
     /* Init board hardware. */
     BOARD_InitBootClocks();
-    /* Se habilita la posibilidad de operar con todos los modos de bajo consumo */
-    SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
-
 
     // Se inicializan funciones de la placa
     board_init();
@@ -84,16 +77,6 @@ int main(void)
 
     /* inicializa interrupción de systick cada 1 ms */
     SysTick_Config(SystemCoreClock / 1000U);
-
-    /**********************************
-         * Ver porque
-         *****************************/
-    APP_SetClockVlpr();
-    currentPowerState = SMC_GetPowerModeState(SMC);
-    APP_ShowPowerMode(currentPowerState);
-    APP_SetClockRunFromVlpr();
-    currentPowerState = SMC_GetPowerModeState(SMC);
-    APP_ShowPowerMode(currentPowerState);
 
     SegLCD_DP2_Off();
     SegLCD_DisplayDecimal(0);
