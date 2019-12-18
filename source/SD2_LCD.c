@@ -48,16 +48,13 @@
 #include "Seg_LCD.h"
 #include "fsl_lpsci.h"
 
-
+/*==================[macros and definitions]=================================*/
 #define MAXIMO_MILISEG 1000
 #define MAXIMA_CUENTA	1000
 
-uint16_t miliseg = 0;
-uint16_t contador = 0;
-
-/*==================[macros and definitions]=================================*/
-
 /*==================[internal data declaration]==============================*/
+static uint16_t miliseg = 0;
+static uint16_t contador = 0;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -65,30 +62,23 @@ uint16_t contador = 0;
 
 /*==================[external data definition]===============================*/
 
-
-bool FLAG = false;
-
 /*==================[internal functions definition]==========================*/
-
-
 
 /*==================[external functions definition]==========================*/
 
 int main(void)
 {
-
 	smc_power_state_t currentPowerState;
 	/**********************************
 	 * Ver porque
 	 *****************************/
 	/* Init board hardware. */
-	    BOARD_InitBootClocks();
-	    /* Se habilita la posibilidad de operar con todos los modos de bajo consumo */
-	    SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
+	BOARD_InitBootClocks();
+	/* Se habilita la posibilidad de operar con todos los modos de bajo consumo */
+	SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
 
 
 	// Se inicializan funciones de la placa
-
 	board_init();
 	SegLCD_Init();
 
@@ -105,19 +95,20 @@ int main(void)
 	currentPowerState = SMC_GetPowerModeState(SMC);
 	APP_ShowPowerMode(currentPowerState);
 
-
 	SegLCD_DP2_Off();
 	SegLCD_DisplayDecimal(0);
     while(1)
     {
-    if(FLAG){
-    	FLAG=false;
-    	contador++;
-    	if(contador == MAXIMA_CUENTA){
-    		contador = 0;
+    	if(miliseg == 0)
+    	{
+    		miliseg = MAXIMO_MILISEG;
+
+    		contador++;
+    		if(contador == MAXIMA_CUENTA){
+    			contador = 0;
+    		}
+    		SegLCD_DisplayDecimal(contador);
     	}
-    	SegLCD_DisplayDecimal(contador);
-    }
     }
 }
 
@@ -125,11 +116,8 @@ int main(void)
 
 void SysTick_Handler(void)
 {
-   miliseg++;
-   if(miliseg==MAXIMO_MILISEG){
-	   miliseg=0;
-	   FLAG= true;
-   }
+   if (miliseg)
+	   miliseg--;
 
 }
 
