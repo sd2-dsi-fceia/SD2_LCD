@@ -50,7 +50,7 @@
 
 /*==================[macros and definitions]=================================*/
 #define MAXIMO_MILISEG 1000
-#define MAXIMA_CUENTA	1000
+#define MAXIMA_CUENTA    1000
 
 /*==================[internal data declaration]==============================*/
 static uint16_t miliseg = 0;
@@ -68,47 +68,47 @@ static uint16_t contador = 0;
 
 int main(void)
 {
-	smc_power_state_t currentPowerState;
-	/**********************************
-	 * Ver porque
-	 *****************************/
-	/* Init board hardware. */
-	BOARD_InitBootClocks();
-	/* Se habilita la posibilidad de operar con todos los modos de bajo consumo */
-	SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
+    smc_power_state_t currentPowerState;
+    /**********************************
+     * Ver porque
+     *****************************/
+    /* Init board hardware. */
+    BOARD_InitBootClocks();
+    /* Se habilita la posibilidad de operar con todos los modos de bajo consumo */
+    SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
 
 
-	// Se inicializan funciones de la placa
-	board_init();
-	SegLCD_Init();
+    // Se inicializan funciones de la placa
+    board_init();
+    SegLCD_Init();
 
-	/* inicializa interrupción de systick cada 1 ms */
-	SysTick_Config(SystemCoreClock / 1000U);
+    /* inicializa interrupción de systick cada 1 ms */
+    SysTick_Config(SystemCoreClock / 1000U);
 
-	/**********************************
-		 * Ver porque
-		 *****************************/
-	APP_SetClockVlpr();
-	currentPowerState = SMC_GetPowerModeState(SMC);
-	APP_ShowPowerMode(currentPowerState);
-	APP_SetClockRunFromVlpr();
-	currentPowerState = SMC_GetPowerModeState(SMC);
-	APP_ShowPowerMode(currentPowerState);
+    /**********************************
+         * Ver porque
+         *****************************/
+    APP_SetClockVlpr();
+    currentPowerState = SMC_GetPowerModeState(SMC);
+    APP_ShowPowerMode(currentPowerState);
+    APP_SetClockRunFromVlpr();
+    currentPowerState = SMC_GetPowerModeState(SMC);
+    APP_ShowPowerMode(currentPowerState);
 
-	SegLCD_DP2_Off();
-	SegLCD_DisplayDecimal(0);
+    SegLCD_DP2_Off();
+    SegLCD_DisplayDecimal(0);
     while(1)
     {
-    	if(miliseg == 0)
-    	{
-    		miliseg = MAXIMO_MILISEG;
+        if(miliseg == 0)
+        {
+            miliseg = MAXIMO_MILISEG;
 
-    		contador++;
-    		if(contador == MAXIMA_CUENTA){
-    			contador = 0;
-    		}
-    		SegLCD_DisplayDecimal(contador);
-    	}
+            contador++;
+            if(contador == MAXIMA_CUENTA){
+                contador = 0;
+            }
+            SegLCD_DisplayDecimal(contador);
+        }
     }
 }
 
@@ -117,7 +117,7 @@ int main(void)
 void SysTick_Handler(void)
 {
    if (miliseg)
-	   miliseg--;
+       miliseg--;
 
 }
 
